@@ -1,0 +1,19 @@
+<%- include('../partials/header', { title: 'Editar Producto' }) %>
+<div class="admin-wrap">
+  <div class="panel">
+    <h2>Editar Producto</h2>
+    <% if (error) { %><p style="color:red"><%= error %></p><% } %>
+    <form action="/admin/editar-producto/<%= producto._id %>" method="post" enctype="multipart/form-data">
+      <div class="form-row"><label for="nombre">Nombre</label><input id="nombre" name="nombre" type="text" value="<%= producto.nombre %>" required></div>
+      <div class="form-row"><label for="precio">Precio (Gs)</label><input id="precio" name="precio" type="number" value="<%= producto.precio %>" required></div>
+      <div class="form-row"><label for="stock">Stock</label><input id="stock" name="stock" type="number" value="<%= producto.stock %>" required></div>
+      <div class="form-row"><label for="ubicacion">Ubicación</label><input id="ubicacion" name="ubicacion" type="text" value="<%= producto.ubicacion %>"></div>
+      <div class="form-row"><label for="imagen">Imagen (opcional)</label><input id="imagen" name="imagen" type="file" accept="image/*"></div>
+      <% if (producto.imagen) { %><div class="form-row"><img src="<%= producto.imagen %>" style="max-width:240px;border-radius:6px;border:1px solid #eee"></div><% } %>
+      <div class="form-row"><label for="descripcion">Descripción</label><textarea id="descripcion" name="descripcion" rows="4"><%= producto.descripcion %></textarea></div>
+      <button class="btn" type="submit">Actualizar</button>
+    </form>
+    <p><a class="link" href="/admin/productos">Volver</a></p>
+  </div>
+</div>
+<%- include('../partials/footer') %>

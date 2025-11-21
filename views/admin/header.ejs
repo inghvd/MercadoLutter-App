@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title><%= title || 'MercadoLutter' %></title>
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header class="container header">
+  <div class="logo">
+    <!-- Pon tu logo en public/logo.png -->
+    <img src="/logo.png" alt="MercadoLutter" onerror="this.style.display='none'">
+  </div>
+  <div class="top-actions">
+    <% if (currentUser) { %>
+      Bienvenido, <%= currentUser.email %> |
+      <% if (currentUser.rol === 'admin') { %>
+        <a href="/admin/dashboard">Admin</a> |
+      <% } %>
+      <a href="/auth/logout">Cerrar sesión</a>
+    <% } else { %>
+      <a href="/auth/login">Iniciar sesión</a> | <a href="/auth/registro">Registro</a>
+    <% } %>
+  </div>
+</header>
+<main class="container">
+

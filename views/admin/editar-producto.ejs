@@ -1,0 +1,50 @@
+<%- include('../partials/header', { title: 'Editar Producto' }) %>
+
+<div class="con[[2](https://www.google.com/url?sa=E&q=https%3A%2F%2Fvertexaisearch.cloud.google.com%2Fgrounding-api-redirect%2FAUZIYQF8sNLnDbbVB_2w4wzTMpX-XkC7N3n5Tz7Sym72WabTflY7HxKix8XKJvMGJ01zQRU2iyj04iBRWxe8BtWkyWWYPbE1fOPpOcOqZ0D_WgJCmdc0SjIz5lq8xurNes8FQByBkAskPV9n7VdC7L02xw%3D%3D)][[3](https://www.google.com/url?sa=E&q=https%3A%2F%2Fvertexaisearch.cloud.google.com%2Fgrounding-api-redirect%2FAUZIYQHriRhzRD78vUBy0ez7pIHWOU9KaCUaehr_a5861UgSHtsl3En8RDOA6EWWCCB6JOYC99ADAtMQufa57MbthZM6CqPj4S2B94oVx5wN2scMmuqS6hmeQBLZ1hMwZR4X1lLTG03jgAmaZIjlcDBvofpCTBuhhNM%3D)]tainer mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header">
+          <h3>Editando: <%= producto.nombre %></h3>
+        </div>
+        <div class="card[[4](https://www.google.com/url?sa=E&q=https%3A%2F%2Fvertexaisearch.cloud.google.com%2Fgrounding-api-redirect%2FAUZIYQEnI-7AdDex_nXCxmY1mrCBIuUEPZVw6svqXkDYAd5Y5bnRSpkd5-aUHhhg8KicXQS2AECbjg5XRbQvMIHjZzEFcmwa1JvegFX6biTKOD2t4QPenujb9N3lU_djkSKW9ZUVpguj1LcXLxfi6r6YonfsiW6mTG85XPqtJ_NLadgRGmr2KZO3)][[5](https://www.google.com/url?sa=E&q=https%3A%2F%2Fvertexaisearch.cloud.google.com%2Fgrounding-api-redirect%2FAUZIYQErFqIUhVb2RZVrzwH8sRtnH4Jjhi4rWtJQ2sgEIm6vErxy5RKOddEUpVuB5002U3kF24OCAwB7lkVjgGAtIm-b1cs5dIiZfo43-pF9s9tMdNJJe-3EbL01SLd9o1OmnHJxVQxaC4fIW8v9q2H0CatnQ1TLTRUcMLdoh_IO8SaA5PXhX341A-cFE1KKkXrLPhKiZaGX6Qg%3D)]-body">
+          <form action="/admin/editar-producto/<%= producto._id %>" method="POST" enctype="multipart/form-data">
+```4.  Guarda el archivo.
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre del Producto</label>
+              <input type="text" class="form-control" id="nombre" name="nombre" value="<%= producto.nombre %>" required>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="precio" class="form-label">Precio (Gs.)</label>
+                <input type="number" class="form-control" id="precio" name="precio" value="<%= producto.precio %>" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="stock" class="form-label">Stock Disponible</label>
+                <input type="number" class="form-control" id="stock" name="stock" value="<%= producto.stock %>" required>
+              </div>
+            </div>
+            <div class="mb-3">
+                <label for="categoria" class="form-label">Ubicación / Categoría</label>
+                <input type="text" class="form-control" id="categoria" name="categoria" value="<%= producto.categoria %>" required>
+            </div>
+            <div class="mb-3">
+              <label for="imagen" class="form-label">Cambiar Foto (Opcional)</label>
+              <input class="form-control" type="file" id="imagen" name="imagen">
+            </div>
+            <div class="mb-3">
+              <label for="descripcion" class="form-label">Descripción Detallada</label>
+              <textarea class="form-control" id="descripcion" name="descripcion" rows="4" required><%= producto.descripcion %></textarea>
+            </div>
+            <div class="d-flex justify-content-end">
+               <a href="/admin/productos" class="btn btn-secondary me-2">Cancelar</a>
+               <button type="submit" class="btn btn-success">Guardar Cambios</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>

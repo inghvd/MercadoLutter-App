@@ -1,0 +1,63 @@
+</main> <!-- Cierra el .container de main -->
+
+<footer class="container text-center mt-5 py-3 border-top">
+  <p>&copy; <%= new Date().getFullYear() %> MercadoLutter. Todos los derechos reservados.</p>
+</footer>
+
+<!-- INICIO: MODAL DE REGLAS DEL GRUPO -->
+<% if (usuario) { %>
+<div class="modal fade" id="reglasModal" tabindex="-1" aria-labelledby="reglasModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reglasModalLabel">Reglas de la Comunidad - Mercado Lutter</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class.modal-body">
+        <p>Lugar dedicado al comercio de artículos <strong>Electrónicos & Equipos de informática</strong>.</p>
+        <p class="text-danger"><em>Excluido Electrodomésticos y Celulares.</em></p>
+        <hr>
+        <h6>Reglas internas</h6>
+        <strong># Permitido poner</strong>
+        <ul>
+          <li>01 Precio</li>
+          <li>02 Lugar</li>
+          <li>03 Trato entre miembros</li>
+          <li>04 Fotos del artículo</li>
+        </ul>
+        <strong># Prohibiciones</strong>
+        <ul>
+          <li>10 Pornografía</li>
+          <li>11 Hostilidad entre miembros</li>
+          <li>12 Cualquier estupidez que afecte la armonía de la comunidad</li>
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Entendido</button>
+      </div>
+    </div>
+  </div>
+</div>
+<% } %>
+<!-- FIN: MODAL DE REGLAS DEL GRUPO -->
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<!-- INICIO: SCRIPT PARA MOSTRAR EL MODAL -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    if (<%= locals.showRules || false %>) {
+      const reglasModalElement = document.getElementById('reglasModal');
+      const reglasModal = new bootstrap.Modal(reglasModalElement);
+      reglasModal.show();
+      
+      // Le decimos al servidor que ya no necesita mostrar las reglas
+      fetch('/auth/rules-seen');
+    }
+  });
+</script>
+<!-- FIN: SCRIPT PARA MOSTRAR EL MODAL -->
+
+</body>
+</html>

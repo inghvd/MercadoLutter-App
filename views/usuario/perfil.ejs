@@ -1,0 +1,45 @@
+<%- include('../partials/header', { title: 'Mi Perfil' }) %>
+
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header">
+          <h3>Mi Perfil</h3>
+        </div>
+        <div class="card-body">
+          <form action="/usuario/perfil" method="POST">
+
+            <!-- CAMPO NOMBRE: Editable -->
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre Completo</label>
+              <input type="text" class="form-control" id="nombre" name="nombre" value="<%= usuario.nombre %>" required>
+            </div>
+
+            <!-- CAMPO EMAIL: No editable (por seguridad) -->
+            <div class="mb-3">
+              <label for="email" class="form-label">Correo Electrónico</label>
+              <input type="email" class="form-control" id="email" name="email" value="<%= usuario.email %>" readonly disabled>
+              <div class="form-text">El correo electrónico no se puede modificar.</div>
+            </div>
+
+            <!-- CAMPO TELÉFONO: Editable -->
+            <div class="mb-3">
+              <label for="telefono" class="form-label">Número de Teléfono (WhatsApp)</label>
+              <input type="tel" class="form-control" id="telefono" name="telefono" value="<%= usuario.telefono %>" required>
+            </div>
+            
+            <!-- BOTONES: Siempre visibles para el usuario -->
+            <div class="d-flex justify-content-end">
+              <a href="/catalogo" class="btn btn-secondary me-2">Cancelar</a>
+              <button type="submit" class="btn btn-primary">Guardar Cambios</button>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<%- include('../partials/footer') %>
