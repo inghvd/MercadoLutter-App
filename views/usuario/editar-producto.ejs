@@ -1,0 +1,47 @@
+<%- include('../partials/header', { title: 'Editar Mi Producto' }) %>
+<div class="container mt-4">
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow-sm">
+        <div class="card-header">
+          <h3>Editando: <%= producto.nombre %></h3>
+        </div>
+        <div class="card-body">
+          <form action="/usuario/editar-producto/<%= producto._id %>" method="POST" enctype="multipart/form-data">
+            <div class="mb-3">
+              <label for="nombre" class="form-label">Nombre del Producto</label>
+              <input type="text" class="form-control" id="nombre" name="nombre" value="<%= producto.nombre %>" required>
+            </div>
+            <div class="row">
+              <div class="col-md-6 mb-3">
+                <label for="precio" class="form-label">Precio (Gs.)</label>
+                <input type="number" class="form-control" id="precio" name="precio" value="<%= producto.precio %>" required>
+              </div>
+              <div class="col-md-6 mb-3">
+                <label for="stock" class="form-label">Stock Disponible</label>
+                <inp[[7](https://www.google.com/url?sa=E&q=https%3A%2F%2Fvertexaisearch.cloud.google.com%2Fgrounding-api-redirect%2FAUZIYQGwzrtohzJlaUmsMzpTZcT3A_TY4EdxtjpZOpTLlANzwmzJFDmXtKOjiINpmXRa2g6GhVDjWrVV2oRC2MzslEr8FZZMyVHETCFKBo7zazHWq_xawPqFLoJyu2RV-zVg3z4yDoZKryFa)][[8](https://www.google.com/url?sa=E&q=https%3A%2F%2Fvertexaisearch.cloud.google.com%2Fgrounding-api-redirect%2FAUZIYQEaMBHwwBGOVAtPxsNJ2a3dj4dwT3noNxVHkYn3VgoQzrjlAiqmTcvhyAK5J9szamFldEZNImjLcoFbRqsrF9vB7o3RO-HQ7HNbHBlkeMbzPCg9dxpxpbiORhFsDy61Q33Yoa2lJKP36IkDUFaCh_9dECZSf7KYan6vDgDmH2w%3D)]ut type="number" class="form-control" id="stock" name="stock" value="<%= producto.stock %>" required>
+              </div>
+            </div>
+            <div class="mb-3">
+                <label for="categoria" class="form-label">Ubicación / Categoría</label>
+                <input type="text" class="form-control" id="categoria" name="categoria" value="<%= producto.categoria %>" required>
+            </div>
+            <div class="mb-3">
+              <label for="imagen" class="form-label">Cambiar Foto (Opcional)</label>
+              <input class="form-control" type="file" id="imagen" name="imagen">
+            </div>
+            <div class="mb-3">
+              <label for="descripcion" class="form-label">Descripción Detallada</label>
+              <textarea class="form-control" id="descripcion" name="descripcion" rows="4" required><%= producto.descripcion %></textarea>
+            </div>
+            <div class="d-flex justify-content-end">
+               <a href="/usuario/productos" class="btn btn-secondary me-2">Cancelar</a>
+               <button type="submit" class="btn btn-success">Guardar Cambios</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include('../partials/footer') %>

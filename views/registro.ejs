@@ -1,0 +1,43 @@
+<%- include('partials/header', { title: 'Registro de Usuario' }) %>
+<div class="row justify-content-center mt-5">
+  <div class="col-md-6">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h3 class="card-title text-center mb-4">Crear una Cuenta</h3>
+        
+        <% if (typeof error !== 'undefined' && error) { %>
+          <div class="alert alert-danger" role="alert"><%= error %></div>
+        <% } %>
+
+        <form action="/auth/registro" method="POST">
+          <div class="mb-3">
+            <label for="nombre" class="form-label">Nombre Completo</label>
+            <input type="text" class="form-control" id="nombre" name="nombre" required>
+          </div>
+          <div class="mb-3">
+            <label for="email" class="form-label">Correo Electrónico</label>
+            <input type="email" class="form-control" id="email" name="email" required>
+          </div>
+          
+          <!-- --- CAMPO NUEVO AÑADIDO --- -->
+          <div class="mb-3">
+            <label for="telefono" class="form-label">Número de Teléfono (para WhatsApp)</label>
+            <input type="tel" class="form-control" id="telefono" name="telefono" placeholder="Ej: 595961178359 (sin el '+')" required>
+          </div>
+
+          <div class="mb-3">
+            <label for="password" class="form-label">Contraseña</label>
+            <input type="password" class="form-control" id="password" name="password" required>
+          </div>
+          <div class="d-grid mt-4">
+            <button type="submit" class="btn btn-primary">Registrarse</button>
+          </div>
+        </form>
+      </div>
+      <div class="card-footer text-center py-3">
+        <small>¿Ya tienes una cuenta? <a href="/auth/login">Inicia Sesión</a></small>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include('partials/footer') %>

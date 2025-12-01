@@ -1,0 +1,42 @@
+<%- include('partials/header', { title: producto.nombre }) %>
+<div class="container mt-4">
+  <div class="card shadow-sm">
+    <div class="row g-0">
+      <div class="col-md-5">
+        <img src="/uploads/<%= producto.imagen %>" class="img-fluid rounded-start" alt="<%= producto.nombre %>" style="width: 100%; height: 450px; object-fit: cover;">
+      </div>
+      <div class="col-md-7">
+        <div class="card-body p-4">
+          <h1 class="card-title"><%= producto.nombre %></h1>
+          <!-- Mostramos el nombre del vendedor -->
+          <p class="card-text"><small class="text-muted">Vendido por: <strong><%= producto.vendedor ? producto.vendedor.nombre : 'Usuario desconocido' %></strong></small></p>
+          <hr>
+          <div class="mb-3">
+            <strong>Detalles y Especificaciones:</strong>
+            <pre class="card-text fs-6"><%= producto.descripcion %></pre>
+          </div>
+          <h2 class="card-text text-success my-4">Gs. <%= producto.precio.toLocaleString('es-ES') %></h2>
+          <p class="card-text"><small class="text-muted">Stock disponible: <%= producto.stock %></small></p>
+
+          <!-- --- LÓGICA DINÁMICA DE WHATSAPP --- -->
+          <div class="d-grid gap-2 mt-4">
+            <% if (producto.vendedor && producto.vendedor.telefono) { %>
+              <% 
+                const textoMensaje = `Hola, estoy interesado en el producto: ${producto.nombre}`;
+                const textoCodificado = encodeURIComponent(textoMensaje);
+                // Usamos el teléfono del vendedor que viene con el producto
+                const enlaceWhatsApp = `https://api.whatsapp.com/send?phone=${producto.vendedor.telefono}&text=${textoCodificado}`;
+              %>
+              <a href="<%= enlaceWhatsApp %>" class="btn btn-success" target="_blank">
+                <i class="bi bi-whatsapp"></i> Contactar al Vendedor por WhatsApp
+              </a>
+            <% } else { %>
+              <button class="btn btn-secondary" disabled>Contacto no disponible</button>
+            <% } %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<%- include('partials/footer') %>

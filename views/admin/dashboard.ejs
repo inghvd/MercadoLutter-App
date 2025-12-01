@@ -1,0 +1,37 @@
+<%- include('../partials/header', { title: 'Dashboard Admin' }) %>
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Dashboard de Administrador</h1>
+    <span>Hola, <strong><%= usuario.nombre %></strong></span>
+  </div>
+  
+  <div class="row">
+    <div class="col-md-6 mb-4">
+      <div class="card text-white bg-primary h-100">
+        <div class="card-body text-center">
+          <h5 class="card-title">Usuarios Registrados</h5>
+          <p class="card-text display-4 fw-bold"><%= totalUsuarios %></p>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-6 mb-4">
+      <div class="card text-white bg-success h-100">
+        <div class="card-body text-center">
+          <h5 class="card-title">Productos en el Catálogo</h5>
+          <p class="card-text display-4 fw-bold"><%= totalProductos %></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <h4>Acciones Rápidas</h4>
+  <div class="list-group mt-3">
+    <!-- ---- INICIO DE LA CORRECCIÓN ---- -->
+    <a href="/usuario/perfil" class="list-group-item list-group-item-action">👤 Editar Mi Perfil</a>
+    <!-- ---- FIN DE LA CORRECCIÓN ---- -->
+    <a href="/admin/usuarios" class="list-group-item list-group-item-action">👥 Gestionar Usuarios</a>
+    <a href="/admin/productos" class="list-group-item list-group-item-action">📋 Gestionar Todos los Productos</a>
+    <a href="/auth/logout" class="list-group-item list-group-item-action text-danger">🚪 Cerrar Sesión</a>
+  </div>
+</div>
+<%- include('../partials/footer') %>
