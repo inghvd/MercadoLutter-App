@@ -14,19 +14,25 @@ const PORT = process.env.PORT || 3033;
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// ====== MIDDLEWARES BÁSICOS ======
+// ====== MIDDLEWARES ======
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
-// ====== HELMET 100% COMPATIBLE CON CLOUDINARY Y EJS ======
+// ====== HELMET CONFIGURADO PARA QUE TODO FUNCIONE Y SE VEA BONITO ======
 app.use(
   helmet({
-    // DESACTIVAMOS CSP porque EJS y Cloudinary lo necesitan
-    contentSecurityPolicy: false,
-    // Permite iframes (por si usas algo)
-    crossOriginEmbedderPolicy: false,
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"], // Bootstrap, etc.
+        styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+        imgSrc: ["'self'", "data:", "https:", "http:"], // Cloudinary + favicon
+        fontSrc: ["'self'", "data:", "https://cdn.jsdelivr.net"],
+        connectSrc: ["'self'"],
+      },
+    },
   })
 );
 
@@ -40,11 +46,7 @@ app.use(
       mongoUrl: process.env.MONGO_URI,
       collectionName: "sessions",
     }),
-    cookie: {
-      maxAge: 1000 * 60 * 60 * 24 * 7,
-      secure: process.env.NODE_ENV === "production",
-      httpOnly: true,
-    },
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 },
   })
 );
 
@@ -71,8 +73,7 @@ app.use((req, res) => {
   res.status(404).render("404", { titulo: "Página no encontrada" });
 });
 
-// ====== INICIAR SERVIDOR ======
+// ====== SERVIDOR ======
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
-  console.log(`Producción: https://mercadolutter-app.onrender.com`);
 });
