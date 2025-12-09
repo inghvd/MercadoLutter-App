@@ -4,19 +4,45 @@ const path = require("path");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const methodOverride = require("method-override");
+const helmet = require("helmet"); // ← AÑADIDO
 const { mongoose } = require("./db");
 
 const app = express();
-
 const PORT = process.env.PORT || 3033;
+
+// ====== CONFIGURACIÓN DE VISTAS ======
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
+// ====== MIDDLEWARES BÁSICOS ======
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
+// ====== HELMET CORREGIDO (NO BLOQUEA NADA) ======
+// Esto permite Cloudinary, favicon, scripts inline, estilos, etc.
+app.use(
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'"], // EJS necesita inline
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        imgSrc: ["'self'", "data:", "https:", "http:"], // Cloudinary usa https
+        fontSrc: ["'self'", "data:"],
+        connectSrc: ["'self'"],
+        objectSrc: ["'none'"],
+        frameAncestors: ["'none'"],
+      },
+    },
+    crossOriginEmbedderPolicy: false,
+    crossOriginOpenerPolicy: false,
+    crossOriginResourcePolicy: { policy: "cross-origin" },
+  })
+);
+
+// ====== SESIÓN ======
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "secret123",
@@ -27,34 +53,38 @@ app.use(
       collectionName: "sessions",
     }),
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24, // 1 día
+      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 días (mejor que 1)
+      secure: process.env.NODE_ENV === "production", // HTTPS en producción
+      httpOnly: true,
     },
   })
 );
 
+// ====== VARIABLES GLOBALES PARA VISTAS ======
 app.use((req, res, next) => {
   res.locals.usuario = req.session.usuario || null;
   res.locals.showRules = req.session.showRules || false;
   next();
 });
 
-// --- RUTAS ---
+// ====== RUTAS ======
 const productoRoutes = require("./routes/productoRoutes");
 const adminRoutes = require("./routes/adminRoutes");
 const authRoutes = require("./routes/authRoutes");
-const usuarioRoutes = require("./routes/usuarioRoutes"); // <-- LÍNEA AÑADIDA
+const usuarioRoutes = require("./routes/usuarioRoutes");
 
 app.use("/", productoRoutes);
 app.use("/admin", adminRoutes);
 app.use("/auth", authRoutes);
-app.use("/usuario", usuarioRoutes); // <-- LÍNEA AÑADIDA
+app.use("/usuario", usuarioRoutes);
 
-// MANEJO DE ERRORES 404
+// ====== 404 ======
 app.use((req, res) => {
   res.status(404).render("404", { titulo: "Página no encontrada" });
 });
 
-// INICIAR SERVIDOR
+// ====== INICIAR SERVIDOR ======
 app.listen(PORT, () => {
-  console.log("✔️ Servidor ejecutándose en http://localhost:" + PORT);
+  console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
+  console.log(`URL en producción: https://mercadolutter-app.onrender.com`);
 });
