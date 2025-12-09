@@ -1,11 +1,12 @@
-// middlewares/upload.js → VERSIÓN QUE NUNCA FALLA EN RENDER
+// middlewares/upload.js → 100% FUNCIONAL EN RENDER (última versión)
 const multer = require('multer');
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 const cloudinary = require('cloudinary').v2;
 
-console.log("CLOUDINARY_CLOUD_NAME:", process.env.CLOUDINARY_CLOUD_NAME || "FALTA");
-console.log("CLOUDINARY_API_KEY:", process.env.CLOUDINARY_API_KEY ? "OK" : "FALTA");
-console.log("CLOUDINARY_API_SECRET:", process.env.CLOUDINARY_API_SECRET ? "OK" : "FALTA");
+// ESTOS LOGS TIENEN QUE APARECER EN RENDER
+console.log("CLOUDINARY_CLOUD_NAME →", process.env.CLOUDINARY_CLOUD_NAME || "FALTA");
+console.log("CLOUDINARY_API_KEY    →", process.env.CLOUDINARY_API_KEY ? "OK" : "FALTA");
+console.log("CLOUDINARY_API_SECRET →", process.env.CLOUDINARY_API_SECRET ? "OK" : "FALTA");
 
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
