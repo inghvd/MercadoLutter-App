@@ -4,13 +4,13 @@ const path = require("path");
 const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const methodOverride = require("method-override");
-const helmet = require("helmet"); // ← AÑADIDO
+const helmet = require("helmet");
 const { mongoose } = require("./db");
 
 const app = express();
 const PORT = process.env.PORT || 3033;
 
-// ====== CONFIGURACIÓN DE VISTAS ======
+// ====== VISTAS ======
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
@@ -20,25 +20,13 @@ app.use(express.json());
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
-// ====== HELMET CORREGIDO (NO BLOQUEA NADA) ======
-// Esto permite Cloudinary, favicon, scripts inline, estilos, etc.
+// ====== HELMET 100% COMPATIBLE CON CLOUDINARY Y EJS ======
 app.use(
   helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'"], // EJS necesita inline
-        styleSrc: ["'self'", "'unsafe-inline'"],
-        imgSrc: ["'self'", "data:", "https:", "http:"], // Cloudinary usa https
-        fontSrc: ["'self'", "data:"],
-        connectSrc: ["'self'"],
-        objectSrc: ["'none'"],
-        frameAncestors: ["'none'"],
-      },
-    },
+    // DESACTIVAMOS CSP porque EJS y Cloudinary lo necesitan
+    contentSecurityPolicy: false,
+    // Permite iframes (por si usas algo)
     crossOriginEmbedderPolicy: false,
-    crossOriginOpenerPolicy: false,
-    crossOriginResourcePolicy: { policy: "cross-origin" },
   })
 );
 
@@ -53,14 +41,14 @@ app.use(
       collectionName: "sessions",
     }),
     cookie: {
-      maxAge: 1000 * 60 * 60 * 24 * 7, // 7 días (mejor que 1)
-      secure: process.env.NODE_ENV === "production", // HTTPS en producción
+      maxAge: 1000 * 60 * 60 * 24 * 7,
+      secure: process.env.NODE_ENV === "production",
       httpOnly: true,
     },
   })
 );
 
-// ====== VARIABLES GLOBALES PARA VISTAS ======
+// ====== VARIABLES LOCALES ======
 app.use((req, res, next) => {
   res.locals.usuario = req.session.usuario || null;
   res.locals.showRules = req.session.showRules || false;
@@ -85,6 +73,6 @@ app.use((req, res) => {
 
 // ====== INICIAR SERVIDOR ======
 app.listen(PORT, () => {
-  console.log(`Servidor ejecutándose en http://localhost:${PORT}`);
-  console.log(`URL en producción: https://mercadolutter-app.onrender.com`);
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Producción: https://mercadolutter-app.onrender.com`);
 });
