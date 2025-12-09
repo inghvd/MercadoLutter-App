@@ -1,4 +1,5 @@
 <%- include('../partials/header', { title: 'Editar Mi Producto' }) %>
+
 <div class="container mt-4">
   <div class="row justify-content-center">
     <div class="col-md-8">
@@ -8,10 +9,12 @@
         </div>
         <div class="card-body">
           <form action="/usuario/editar-producto/<%= producto._id %>" method="POST" enctype="multipart/form-data">
+            
             <div class="mb-3">
               <label for="nombre" class="form-label">Nombre del Producto</label>
               <input type="text" class="form-control" id="nombre" name="nombre" value="<%= producto.nombre %>" required>
             </div>
+
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="precio" class="form-label">Precio (Gs.)</label>
@@ -22,30 +25,50 @@
                 <input type="number" class="form-control" id="stock" name="stock" value="<%= producto.stock %>" required>
               </div>
             </div>
+
             <div class="mb-3">
-                <label for="categoria" class="form-label">Ubicación / Categoría</label>
-                <input type="text" class="form-control" id="categoria" name="categoria" value="<%= producto.categoria %>" required>
+              <label for="categoria" class="form-label">Ubicación / Categoría</label>
+              <input type="text" class="form-control" id="categoria" name="categoria" value="<%= producto.categoria %>" required>
             </div>
 
-            <!-- IMÁGENES MÚLTIPLES PARA EDITAR (reemplaza todas) -->
+            <!-- SUBIDA MÚLTIPLE A CLOUDINARY (hasta 10 imágenes) -->
             <div class="mb-3">
               <label for="imagenes" class="form-label">Cambiar Fotos (Opcional - máx. 10)</label>
-              <input class="form-control" 
-                     type="file" 
-                     id="imagenes" 
-                     name="imagenes" 
-                     multiple 
-                     accept="image/*">
-              <div class="form-text">Si subes nuevas fotos, reemplazarán todas las anteriores</div>
+              <input 
+                type="file" 
+                class="form-control" 
+                id="imagenes" 
+                name="imagenes" 
+                multiple 
+                accept="image/*"
+              >
+              <div class="form-text text-info">
+                Puedes seleccionar varias fotos (Ctrl + clic). Si subes nuevas, reemplazarán todas las anteriores.
+              </div>
             </div>
+
+            <!-- Mostrar imágenes actuales (opcional, bonito) -->
+            <% if (producto.imagenes && producto.imagenes.length > 0) { %>
+              <div class="mb-3">
+                <label class="form-label">Fotos actuales:</label>
+                <div class="row g-3">
+                  <% producto.imagenes.forEach(img => { %>
+                    <div class="col-4 col-md-3">
+                      <img src="<%= img.url %>" class="img-fluid rounded shadow-sm" alt="Foto actual">
+                    </div>
+                  <% }) %>
+                </div>
+              </div>
+            <% } %>
 
             <div class="mb-3">
               <label for="descripcion" class="form-label">Descripción Detallada</label>
-              <textarea class="form-control" id="descripcion" name="descripcion" rows="4" required><%= producto.descripcion %></textarea>
+              <textarea class="form-control" id="descripcion" name="descripcion" rows="5" required><%= producto.descripcion %></textarea>
             </div>
-            <div class="d-flex justify-content-end">
-               <a href="/usuario/productos" class="btn btn-secondary me-2">Cancelar</a>
-               <button type="submit" class="btn btn-success">Guardar Cambios</button>
+
+            <div class="d-flex justify-content-end gap-2">
+              <a href="/usuario/productos" class="btn btn-secondary">Cancelar</a>
+              <button type="submit" class="btn btn-success">Guardar Cambios</button>
             </div>
           </form>
         </div>
@@ -53,4 +76,5 @@
     </div>
   </div>
 </div>
+
 <%- include('../partials/footer') %>
