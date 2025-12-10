@@ -2,7 +2,8 @@
 
 const express = require('express');
 const router = express.Router();
-const upload = require('../middlewares/upload'); // AHORA IMPORTA EL MIDDLEWARE DE CLOUDINARY
+// Importamos el middleware de Cloudinary
+const upload = require('../middlewares/upload'); 
 const usuarioController = require('../controllers/usuarioController');
 
 // Middleware de seguridad: solo para usuarios logueados
@@ -18,13 +19,11 @@ router.use(ensureUser);
 router.get('/productos', usuarioController.showMyProducts);
 router.get('/crear-producto', usuarioController.showCreateForm);
 
-// ==============================================================
-// --- CORREGIDO: Usamos upload.array para múltiples archivos ('imagenes', máx. 10) ---
-// ==============================================================
+// **ESTA ES LA LÍNEA CORREGIDA:** Incluye el middleware de subida (upload.array)
 router.post('/crear-producto', upload.array('imagenes', 10), usuarioController.createProduct);
 
 router.get('/editar-producto/:id', usuarioController.showEditForm);
-// Dejamos upload.single('imagen') aquí, ya que el formulario de edición solo envía un archivo a la vez.
+// Mantenemos upload.single para edición si solo se permite una imagen por el formulario de edición.
 router.post('/editar-producto/:id', upload.single('imagen'), usuarioController.updateProduct);
 router.delete('/eliminar-producto/:id', usuarioController.deleteProduct);
 
