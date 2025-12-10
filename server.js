@@ -20,20 +20,25 @@ app.use(express.json());
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
-// ====== HELMET CONFIGURADO PARA QUE TODO FUNCIONE Y SE VEA BONITO (CORREGIDO) ======
+// ====== HELMET CORREGIDO FINALMENTE: Permite scripts en botones y Cloudinary ======
 app.use(
   helmet({
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"], // Bootstrap, etc.
+        // Scripts en <script src="..."> (Bootstrap, etc.)
+        scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
+        // CRÍTICO: Permite scripts en atributos de elementos (como el onclick="return confirm(...)")
+        scriptSrcAttr: ["'unsafe-inline'"], 
+        // Permite scripts inline dentro de etiquetas <script>
+        scriptSrcElem: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"], 
         styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
-        imgSrc: ["'self'", "data:", "https://res.cloudinary.com/demjmyttl/", "https:"], // Cloudinary + favicon. Se añadió el dominio específico.
+        imgSrc: ["'self'", "data:", "https://res.cloudinary.com/demjmyttl/", "https:"], 
         fontSrc: ["'self'", "data:", "https://cdn.jsdelivr.net"],
         connectSrc: ["'self'"],
       },
     },
-    // CRÍTICO: Deshabilitar políticas de origen cruzado que pueden interferir con Multer/Cloudinary en Render
+    // Deshabilitar políticas de origen cruzado para Multer/Cloudinary
     crossOriginResourcePolicy: false,
     crossOriginOpenerPolicy: false,
     crossOriginEmbedderPolicy: false,
