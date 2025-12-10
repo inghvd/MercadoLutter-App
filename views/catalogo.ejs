@@ -1,38 +1,42 @@
 <%- include('partials/header', { title: 'Catálogo de Productos' }) %>
 
 <div class="d-flex justify-content-between align-items-center mb-4">
-  <h1>Catálogo de Productos</h1>
-  <% if (typeof total !== 'undefined') { %>
-    <span class="badge bg-secondary rounded-pill"><%= total %> Artículos</span>
-  <% } %>
+  <h1>Catálogo de Productos</h1>
+  <% if (typeof total !== 'undefined') { %>
+    <span class="badge bg-secondary rounded-pill"><%= total %> Artículos</span>
+  <% } %>
 </div>
 
 <% if (productos.length > 0) { %>
-  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
-    <% productos.forEach(producto => { %>
-      <div class="col">
-        <div class="card h-100 shadow-sm">
-          <!-- CORRECCIÓN: El enlace principal debe apuntar al ID del producto -->
-          <a href="/producto/<%= producto._id %>">
-            <img src="/uploads/<%= producto.imagen %>" class="card-img-top" alt="<%= producto.nombre %>" style="height: 250px; object-fit: cover;">
-          </a>
-          <div class="card-body">
-            <h5 class="card-title"><%= producto.nombre %></h5>
-            <h4 class="card-text text-success mb-2">Gs. <%= producto.precio.toLocaleString('es-ES') %></h4>
-          </div>
-          <div class="card-footer bg-white border-0 pb-3">
-             <small class="text-muted">Stock: <%= producto.stock %></small>
-             <!-- CORRECCIÓN: Este enlace también debe apuntar al ID del producto -->
-             <a href="/producto/<%= producto._id %>" class="btn btn-primary w-100 mt-2">Ver Detalles</a>
-          </div>
-        </div>
-      </div>
-    <% }) %>
-  </div>
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+    <% productos.forEach(producto => { %>
+      <div class="col">
+        <div class="card h-100 shadow-sm">
+                    <a href="/producto/<%= producto._id %>">
+            <% 
+                // Aseguramos que el producto tenga el array 'imagenes' y que no esté vacío
+                const imageUrl = (producto.imagenes && producto.imagenes.length > 0) 
+                    ? producto.imagenes[0].url 
+                    : '/uploads/default.png'; // Fallback a la ruta local (o mejor, a una URL de Cloudinary)
+            %>
+            <img src="<%= imageUrl %>" class="card-img-top" alt="<%= producto.nombre %>" style="height: 250px; object-fit: cover;">
+          </a>
+          <div class="card-body">
+            <h5 class="card-title"><%= producto.nombre %></h5>
+            <h4 class="card-text text-success mb-2">Gs. <%= producto.precio.toLocaleString('es-ES') %></h4>
+          </div>
+          <div class="card-footer bg-white border-0 pb-3">
+             <small class="text-muted">Stock: <%= producto.stock %></small>
+             <a href="/producto/<%= producto._id %>" class="btn btn-primary w-100 mt-2">Ver Detalles</a>
+          </div>
+        </div>
+      </div>
+    <% }) %>
+  </div>
 <% } else { %>
-  <div class="alert alert-warning text-center" role="alert">
-    No se encontraron productos.
-  </div>
+  <div class="alert alert-warning text-center" role="alert">
+    No se encontraron productos.
+  </div>
 <% } %>
 
 <%- include('partials/footer') %>
