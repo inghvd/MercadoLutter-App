@@ -8,13 +8,10 @@ const path = require('path');
 // const { cloudinary } = require('../middlewares/cloudinary'); // Asumiendo que exportaste la instancia de Cloudinary
 
 // --- FUNCIÓN AUXILIAR (ATENCIÓN: ESTA FUNCIÓN ES PARA ALMACENAMIENTO LOCAL) ---
-// Si estás usando Cloudinary, la lógica de eliminación DEBE usar el SDK de Cloudinary
-// y el public_id (filename), no fs.unlink. Por ahora la dejamos como estaba.
 const eliminarImagen = (filename) => {
-  // Nos aseguramos de no borrar la imagen por defecto
+  // Esta función ya no es funcional en Render con Cloudinary. La dejaremos así.
   if (filename && filename !== 'default.png') {
     const imagePath = path.join(__dirname, '..', 'public', 'uploads', filename);
-    // fs.unlink borra el archivo. Se ejecuta en segundo plano para no frenar la app.
     fs.unlink(imagePath, (err) => {
       if (err) console.error("Error al intentar eliminar la imagen:", err.message);
     });
@@ -42,14 +39,13 @@ const usuarioController = {
   },
 
   // ======================================================================
-  // --- FUNCIÓN CORREGIDA: MANEJA MÚLTIPLES ARCHIVOS (req.files) ---
+  // --- FUNCIÓN CORREGIDA: CORRECCIÓN DE LA RUTA POR DEFECTO ---
   // ======================================================================
   createProduct: async (req, res) => {
     try {
       const { nombre, descripcion, precio, categoria, stock } = req.body;
       
       // Mapeamos el array de archivos subidos por Multer-Cloudinary (req.files)
-      // Esto crea un array de objetos con la URL y el nombre/ID público.
       const imagenesSubidas = req.files.map(file => ({
         url: file.path, // URL generada por Cloudinary
         filename: file.filename || file.public_id // ID público de Cloudinary
@@ -58,7 +54,8 @@ const usuarioController = {
       // Si no se subió ninguna imagen, se usa la imagen por defecto.
       if (imagenesSubidas.length === 0) {
         imagenesSubidas.push({ 
-          url: '/uploads/default.png', // Ruta para el front-end
+          // <--- ¡CORRECCIÓN APLICADA AQUÍ con tu URL!
+          url: 'https://res.cloudinary.com/demjmyttl/image/upload/v1765378418/mercado-lutter/productos/slxk7ifrnai54kuu87fy.jpg', 
           filename: 'default.png'
         }); 
       }
@@ -80,8 +77,6 @@ const usuarioController = {
 
     } catch (error) {
       console.error("Error al crear el producto:", error);
-      // Si hubo un error después de la subida, es buena práctica borrar las imágenes
-      // que ya se subieron a Cloudinary para evitar basura. Esto requeriría el SDK.
       res.status(500).send('Ocurrió un error al publicar tu producto.');
     }
   },
@@ -127,7 +122,6 @@ const usuarioController = {
           filename: req.file.filename || req.file.public_id
         };
 
-        // Lógica para reemplazar la primera imagen del array (main image)
         // 1. Opcional: Eliminar la imagen antigua de Cloudinary (requiere el SDK).
         // 2. Reemplazamos la primera imagen del array 'imagenes'
         datosActualizados['imagenes.0'] = nuevaImagen; 
