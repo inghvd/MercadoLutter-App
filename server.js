@@ -20,41 +20,45 @@ app.use(express.json());
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
-// ====== HELMET CONFIGURADO PARA QUE TODO FUNCIONE Y SE VEA BONITO ======
+// ====== HELMET CONFIGURADO PARA QUE TODO FUNCIONE Y SE VEA BONITO (CORREGIDO) ======
 app.use(
-  helmet({
-    contentSecurityPolicy: {
-      directives: {
-        defaultSrc: ["'self'"],
-        scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"], // Bootstrap, etc.
-        styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
-        imgSrc: ["'self'", "data:", "https:", "http:"], // Cloudinary + favicon
-        fontSrc: ["'self'", "data:", "https://cdn.jsdelivr.net"],
-        connectSrc: ["'self'"],
-      },
-    },
-  })
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"], // Bootstrap, etc.
+        styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
+        imgSrc: ["'self'", "data:", "https://res.cloudinary.com/demjmyttl/", "https:"], // Cloudinary + favicon. Se añadió el dominio específico.
+        fontSrc: ["'self'", "data:", "https://cdn.jsdelivr.net"],
+        connectSrc: ["'self'"],
+      },
+    },
+    // CRÍTICO: Deshabilitar políticas de origen cruzado que pueden interferir con Multer/Cloudinary en Render
+    crossOriginResourcePolicy: false,
+    crossOriginOpenerPolicy: false,
+    crossOriginEmbedderPolicy: false,
+  })
 );
 
 // ====== SESIÓN ======
 app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "secret123",
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URI,
-      collectionName: "sessions",
-    }),
-    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 },
-  })
+  session({
+    secret: process.env.SESSION_SECRET || "secret123",
+    resave: false,
+    saveUninitialized: false,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URI,
+      collectionName: "sessions",
+    }),
+    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 },
+  })
 );
 
 // ====== VARIABLES LOCALES ======
 app.use((req, res, next) => {
-  res.locals.usuario = req.session.usuario || null;
-  res.locals.showRules = req.session.showRules || false;
-  next();
+  res.locals.usuario = req.session.usuario || null;
+  res.locals.showRules = req.session.showRules || false;
+  next();
 });
 
 // ====== RUTAS ======
@@ -70,10 +74,10 @@ app.use("/usuario", usuarioRoutes);
 
 // ====== 404 ======
 app.use((req, res) => {
-  res.status(404).render("404", { titulo: "Página no encontrada" });
+  res.status(404).render("404", { titulo: "Página no encontrada" });
 });
 
 // ====== SERVIDOR ======
 app.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+  console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });

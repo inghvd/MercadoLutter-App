@@ -19,16 +19,17 @@ router.get('/productos', usuarioController.showMyProducts);
 router.get('/crear-producto', usuarioController.showCreateForm);
 
 // ==============================================================
-// --- Usamos el middleware de Cloudinary (upload.single('imagen')) ---
+// --- CORREGIDO: Usamos upload.array para múltiples archivos ('imagenes', máx. 10) ---
 // ==============================================================
-router.post('/crear-producto', upload.single('imagen'), usuarioController.createProduct);
+router.post('/crear-producto', upload.array('imagenes', 10), usuarioController.createProduct);
 
 router.get('/editar-producto/:id', usuarioController.showEditForm);
+// Dejamos upload.single('imagen') aquí, ya que el formulario de edición solo envía un archivo a la vez.
 router.post('/editar-producto/:id', upload.single('imagen'), usuarioController.updateProduct);
 router.delete('/eliminar-producto/:id', usuarioController.deleteProduct);
 
 // --- Rutas de Perfil ---
 router.get('/perfil', usuarioController.showProfileForm);
-router.post('/perfil', upload.single('imagenPerfil'), usuarioController.updateProfile); // Asumiendo que el campo de perfil es 'imagenPerfil' o similar
+router.post('/perfil', upload.single('imagenPerfil'), usuarioController.updateProfile);
 
 module.exports = router;
