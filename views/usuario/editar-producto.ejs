@@ -1,42 +1,71 @@
 <%- include('../partials/header', { title: 'Editar Mi Producto' }) %>
+
 <div class="container mt-4">
   <div class="row justify-content-center">
-    <div class="col-md-8">
+    <div class="col-md-9">
       <div class="card shadow-sm">
-        <div class="card-header">
-          <h3>Editando: <%= producto.nombre %></h3>
+        <div class="card-header bg-warning text-dark">
+          <h3 class="mb-0">Editando: <%= producto.nombre %></h3>
         </div>
         <div class="card-body">
           <form action="/usuario/editar-producto/<%= producto._id %>" method="POST" enctype="multipart/form-data">
+
             <div class="mb-3">
               <label for="nombre" class="form-label">Nombre del Producto</label>
               <input type="text" class="form-control" id="nombre" name="nombre" value="<%= producto.nombre %>" required>
             </div>
+
             <div class="row">
               <div class="col-md-6 mb-3">
                 <label for="precio" class="form-label">Precio (Gs.)</label>
-                <input type="number" class="form-control" id="precio" name="precio" value="<%= producto.precio %>" required>
+                <input type="number" class="form-control" id="precio" name="precio" value="<%= producto.precio %>" min="1" required>
               </div>
               <div class="col-md-6 mb-3">
                 <label for="stock" class="form-label">Stock Disponible</label>
-                <input type="number" class="form-control" id="stock" name="stock" value="<%= producto.stock %>" required>
+                <input type="number" class="form-control" id="stock" name="stock" value="<%= producto.stock %>" min="1" required>
               </div>
             </div>
+
             <div class="mb-3">
-                <label for="categoria" class="form-label">Ubicación / Categoría</label>
-                <input type="text" class="form-control" id="categoria" name="categoria" value="<%= producto.categoria %>" required>
+              <label for="categoria" class="form-label">Ubicación / Categoría</label>
+              <input type="text" class="form-control" id="categoria" name="categoria" value="<%= producto.categoria %>" required>
             </div>
-            <div class="mb-3">
-              <label for="imagen" class="form-label">Cambiar Foto (Opcional)</label>
-              <input class="form-control" type="file" id="imagen" name="imagen">
+
+                        <div class="mb-3">
+              <label for="imagen" class="form-label">Cambiar Foto Principal (Opcional)</label>
+              <input 
+                type="file" 
+                class="form-control" 
+                id="imagen" 
+                name="imagen"  
+                accept="image/*"
+              >
+              <div class="form-text text-info">
+                Sube una nueva foto para reemplazar la actual.
+              </div>
             </div>
+
+            <% if (producto.imagenes && producto.imagenes.length > 0) { %>
+              <div class="mb-4">
+                <label class="form-label fw-bold">Fotos actuales:</label>
+                <div class="row g-3">
+                  <% producto.imagenes.forEach(img => { %>
+                    <div class="col-6 col-md-4 col-lg-3">
+                      <img src="<%= img.url %>" class="img-fluid rounded shadow-sm border" alt="Foto actual" style="height: 180px; object-fit: cover;">
+                    </div>
+                  <% }) %>
+                </div>
+              </div>
+            <% } %>
+
             <div class="mb-3">
               <label for="descripcion" class="form-label">Descripción Detallada</label>
-              <textarea class="form-control" id="descripcion" name="descripcion" rows="4" required><%= producto.descripcion %></textarea>
+              <textarea class="form-control" id="descripcion" name="descripcion" rows="6" required><%= producto.descripcion %></textarea>
             </div>
-            <div class="d-flex justify-content-end">
-               <a href="/usuario/productos" class="btn btn-secondary me-2">Cancelar</a>
-               <button type="submit" class="btn btn-success">Guardar Cambios</button>
+
+            <div class="d-flex justify-content-end gap-2">
+              <a href="/usuario/productos" class="btn btn-secondary">Cancelar</a>
+              <button type="submit" class="btn btn-success">Guardar Cambios</button>
             </div>
           </form>
         </div>
@@ -44,4 +73,5 @@
     </div>
   </div>
 </div>
+
 <%- include('../partials/footer') %>
