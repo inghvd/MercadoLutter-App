@@ -5,10 +5,14 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const methodOverride = require("method-override");
 const helmet = require("helmet");
+const favicon = require("serve-favicon"); // <-- NUEVA IMPORTACIÓN
 const { mongoose } = require("./db");
 
 const app = express();
 const PORT = process.env.PORT || 3033;
+
+// RUTA DEL FAVICON (asume que está en 'public/favicon.ico')
+const faviconPath = path.join(__dirname, 'public', 'favicon.ico'); 
 
 // ====== VISTAS ======
 app.set("view engine", "ejs");
@@ -18,6 +22,10 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
+
+// USAR EL MIDDLEWARE DE FAVICON AQUÍ
+app.use(favicon(faviconPath)); // <-- NUEVO MIDDLEWARE
+
 app.use(express.static(path.join(__dirname, "public")));
 
 // ====== HELMET CORREGIDO FINALMENTE: Permite scripts en botones y Cloudinary ======
@@ -26,22 +34,22 @@ app.use(
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        // Scripts en <script src="..."> (Bootstrap, etc.)
+        // Scripts en <script src="..."> (Bootstrap, etc.)
         scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
-        // CRÍTICO: Permite scripts en atributos de elementos (como el onclick="return confirm(...)")
-        scriptSrcAttr: ["'unsafe-inline'"], 
-        // Permite scripts inline dentro de etiquetas <script>
-        scriptSrcElem: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"], 
+        // CRÍTICO: Permite scripts en atributos de elementos (como el onclick="return confirm(...)")
+        scriptSrcAttr: ["'unsafe-inline'"], 
+        // Permite scripts inline dentro de etiquetas <script>
+        scriptSrcElem: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"], 
         styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
         imgSrc: ["'self'", "data:", "https://res.cloudinary.com/demjmyttl/", "https:"], 
         fontSrc: ["'self'", "data:", "https://cdn.jsdelivr.net"],
         connectSrc: ["'self'"],
       },
     },
-    // Deshabilitar políticas de origen cruzado para Multer/Cloudinary
-    crossOriginResourcePolicy: false,
-    crossOriginOpenerPolicy: false,
-    crossOriginEmbedderPolicy: false,
+    // Deshabilitar políticas de origen cruzado para Multer/Cloudinary
+    crossOriginResourcePolicy: false,
+    crossOriginOpenerPolicy: false,
+    crossOriginEmbedderPolicy: false,
   })
 );
 
