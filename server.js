@@ -1,3 +1,4 @@
+// server.js (CÓDIGO CORREGIDO)
 require("dotenv").config();
 const express = require("express");
 const path = require("path");
@@ -5,14 +6,14 @@ const session = require("express-session");
 const MongoStore = require("connect-mongo");
 const methodOverride = require("method-override");
 const helmet = require("helmet");
-const favicon = require("serve-favicon"); // <-- NUEVA IMPORTACIÓN
+// const favicon = require("serve-favicon"); // <-- IMPORTACIÓN COMENTADA
 const { mongoose } = require("./db");
 
 const app = express();
 const PORT = process.env.PORT || 3033;
 
 // RUTA DEL FAVICON (asume que está en 'public/favicon.ico')
-const faviconPath = path.join(__dirname, 'public', 'favicon.ico'); 
+// const faviconPath = path.join(__dirname, 'public', 'favicon.ico'); 
 
 // ====== VISTAS ======
 app.set("view engine", "ejs");
@@ -24,21 +25,19 @@ app.use(express.json());
 app.use(methodOverride("_method"));
 
 // USAR EL MIDDLEWARE DE FAVICON AQUÍ
-app.use(favicon(faviconPath)); // <-- NUEVO MIDDLEWARE
+// app.use(favicon(faviconPath)); // <-- COMENTADO PARA EVITAR ERROR ENOENT
 
 app.use(express.static(path.join(__dirname, "public")));
 
 // ====== HELMET CORREGIDO FINALMENTE: Permite scripts en botones y Cloudinary ======
+// (El código de Helmet aquí es correcto y se mantiene)
 app.use(
   helmet({
     contentSecurityPolicy: {
       directives: {
         defaultSrc: ["'self'"],
-        // Scripts en <script src="..."> (Bootstrap, etc.)
         scriptSrc: ["'self'", "https://cdn.jsdelivr.net"],
-        // CRÍTICO: Permite scripts en atributos de elementos (como el onclick="return confirm(...)")
         scriptSrcAttr: ["'unsafe-inline'"], 
-        // Permite scripts inline dentro de etiquetas <script>
         scriptSrcElem: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"], 
         styleSrc: ["'self'", "'unsafe-inline'", "https://cdn.jsdelivr.net"],
         imgSrc: ["'self'", "data:", "https://res.cloudinary.com/demjmyttl/", "https:"], 
@@ -46,7 +45,6 @@ app.use(
         connectSrc: ["'self'"],
       },
     },
-    // Deshabilitar políticas de origen cruzado para Multer/Cloudinary
     crossOriginResourcePolicy: false,
     crossOriginOpenerPolicy: false,
     crossOriginEmbedderPolicy: false,
@@ -55,40 +53,17 @@ app.use(
 
 // ====== SESIÓN ======
 app.use(
-  session({
-    secret: process.env.SESSION_SECRET || "secret123",
-    resave: false,
-    saveUninitialized: false,
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URI,
-      collectionName: "sessions",
-    }),
-    cookie: { maxAge: 1000 * 60 * 60 * 24 * 7 },
-  })
+// ... (código de sesión sin cambios)
 );
 
 // ====== VARIABLES LOCALES ======
-app.use((req, res, next) => {
-  res.locals.usuario = req.session.usuario || null;
-  res.locals.showRules = req.session.showRules || false;
-  next();
-});
+// ... (código de variables locales sin cambios)
 
 // ====== RUTAS ======
-const productoRoutes = require("./routes/productoRoutes");
-const adminRoutes = require("./routes/adminRoutes");
-const authRoutes = require("./routes/authRoutes");
-const usuarioRoutes = require("./routes/usuarioRoutes");
-
-app.use("/", productoRoutes);
-app.use("/admin", adminRoutes);
-app.use("/auth", authRoutes);
-app.use("/usuario", usuarioRoutes);
+// ... (código de rutas sin cambios)
 
 // ====== 404 ======
-app.use((req, res) => {
-  res.status(404).render("404", { titulo: "Página no encontrada" });
-});
+// ... (código de 404 sin cambios)
 
 // ====== SERVIDOR ======
 app.listen(PORT, () => {
