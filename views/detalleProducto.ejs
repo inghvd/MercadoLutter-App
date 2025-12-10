@@ -3,17 +3,18 @@
   <div class="card shadow-sm">
     <div class="row g-0">
       <div class="col-md-5">
-                <% 
+        <% 
+            // CORRECCIÓN CLAVE: Usamos la URL de Cloudinary si no hay imagen
             const detailImageUrl = (producto.imagenes && producto.imagenes.length > 0) 
                 ? producto.imagenes[0].url 
-                : '/uploads/default.png'; // Fallback
+                : 'https://res.cloudinary.com/demjmyttl/image/upload/v1765378418/mercado-lutter/productos/slxk7ifrnai54kuu87fy.jpg'; 
         %>
         <img src="<%= detailImageUrl %>" class="img-fluid rounded-start" alt="<%= producto.nombre %>" style="width: 100%; height: 450px; object-fit: cover;">
-              </div>
+      </div>
       <div class="col-md-7">
         <div class="card-body p-4">
           <h1 class="card-title"><%= producto.nombre %></h1>
-                    <p class="card-text"><small class="text-muted">Vendido por: <strong><%= producto.vendedor ? producto.vendedor.nombre : 'Usuario desconocido' %></strong></small></p>
+          <p class="card-text"><small class="text-muted">Vendido por: <strong><%= producto.vendedor ? producto.vendedor.nombre : 'Usuario desconocido' %></strong></small></p>
           <hr>
           <div class="mb-3">
             <strong>Detalles y Especificaciones:</strong>
@@ -27,7 +28,6 @@
               <% 
                 const textoMensaje = `Hola, estoy interesado en el producto: ${producto.nombre}`;
                 const textoCodificado = encodeURIComponent(textoMensaje);
-                // Usamos el teléfono del vendedor que viene con el producto
                 const enlaceWhatsApp = `https://api.whatsapp.com/send?phone=${producto.vendedor.telefono}&text=${textoCodificado}`;
               %>
               <a href="<%= enlaceWhatsApp %>" class="btn btn-success" target="_blank">

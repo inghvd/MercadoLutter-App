@@ -12,12 +12,12 @@
     <% productos.forEach(producto => { %>
       <div class="col">
         <div class="card h-100 shadow-sm">
-                    <a href="/producto/<%= producto._id %>">
+          <a href="/producto/<%= producto._id %>">
             <% 
-                // Aseguramos que el producto tenga el array 'imagenes' y que no esté vacío
+                // CORRECCIÓN CLAVE: Usamos la URL de Cloudinary si no hay imagen
                 const imageUrl = (producto.imagenes && producto.imagenes.length > 0) 
                     ? producto.imagenes[0].url 
-                    : '/uploads/default.png'; // Fallback a la ruta local (o mejor, a una URL de Cloudinary)
+                    : 'https://res.cloudinary.com/demjmyttl/image/upload/v1765378418/mercado-lutter/productos/slxk7ifrnai54kuu87fy.jpg'; 
             %>
             <img src="<%= imageUrl %>" class="card-img-top" alt="<%= producto.nombre %>" style="height: 250px; object-fit: cover;">
           </a>
