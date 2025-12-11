@@ -1,8 +1,11 @@
+// routes/usuarioRoutes.js → versión final corregida
+
 const express = require('express');
 const router = express.Router();
 const { upload } = require('../middlewares/upload'); // IMPORTAR CON LLAVES
 const usuarioController = require('../controllers/usuarioController');
 
+// Middleware de seguridad
 const ensureUser = (req, res, next) => {
   if (req.session && req.session.usuario) return next();
   return res.redirect('/auth/login');
@@ -10,7 +13,7 @@ const ensureUser = (req, res, next) => {
 
 router.use(ensureUser);
 
-// Productos
+// Gestión de productos
 router.get('/productos', usuarioController.showMyProducts);
 router.get('/crear-producto', usuarioController.showCreateForm);
 router.post('/crear-producto', upload.array('imagenes', 10), usuarioController.createProduct);
