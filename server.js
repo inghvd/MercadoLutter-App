@@ -93,6 +93,11 @@ app.get("/", (req, res) => {
   res.redirect("/producto/catalogo");
 });
 
+// Redirección adicional para evitar 404 en /catalogo
+app.get("/catalogo", (req, res) => {
+  res.redirect("/producto/catalogo");
+});
+
 // Healthcheck
 app.get("/health", (req, res) => {
   res.status(200).json({ ok: true, env: NODE_ENV, db: mongoose.connection.readyState });
