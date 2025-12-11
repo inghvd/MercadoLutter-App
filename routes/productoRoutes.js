@@ -18,20 +18,25 @@ router.get(['/', '/productos', '/catalogo'], async (req, res) => {
   }
 });
 
-// Ruta para el detalle de un producto (corregida: /producto/:id)
+// Ruta para el detalle de un producto en /producto/:id
 router.get('/:id', async (req, res) => {
   try {
-    if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+    const { id } = req.params;
+
+    // Validar que el ID sea un ObjectId válido
+    if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(404).render('404', { titulo: 'Producto no encontrado' });
     }
 
-    const producto = await Producto.findById(req.params.id)
+    // Buscar el producto y traer datos del vendedor
+    const producto = await Producto.findById(id)
                                    .populate('vendedor', 'nombre telefono');
 
     if (!producto) {
       return res.status(404).render('404', { titulo: 'Producto no encontrado' });
     }
 
+    // Renderizar la vista detalleProducto con el producto
     res.render('detalleProducto', {
       producto,
       titulo: producto.nombre
