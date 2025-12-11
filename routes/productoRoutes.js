@@ -13,29 +13,27 @@ router.get(['/', '/productos', '/catalogo'], async (req, res) => {
       titulo: "Catálogo de Productos"
     });
   } catch (error) {
+    console.error("Error al cargar el catálogo:", error);
     res.status(500).send("Error interno del servidor");
   }
 });
 
-// Ruta para el detalle de un producto
-router.get('/producto/:id', async (req, res) => {
+// Ruta para el detalle de un producto (corregida: /producto/:id)
+router.get('/:id', async (req, res) => {
   try {
     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
       return res.status(404).render('404', { titulo: 'Producto no encontrado' });
     }
-    
-    // --- CAMBIO CLAVE ---
-    // Al buscar el producto, usamos .populate() para traer también los datos del vendedor.
+
     const producto = await Producto.findById(req.params.id)
-                                   .populate('vendedor', 'nombre telefono'); // Traemos nombre y teléfono del vendedor
+                                   .populate('vendedor', 'nombre telefono');
 
     if (!producto) {
       return res.status(404).render('404', { titulo: 'Producto no encontrado' });
     }
-    
-    // Ya no necesitamos pasar el whatsappNumber global, porque ahora viene en el objeto 'producto'
-    res.render('detalleProducto', { 
-      producto: producto,
+
+    res.render('detalleProducto', {
+      producto,
       titulo: producto.nombre
     });
   } catch (error) {
@@ -45,3 +43,4 @@ router.get('/producto/:id', async (req, res) => {
 });
 
 module.exports = router;
+
