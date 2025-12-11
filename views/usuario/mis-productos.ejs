@@ -1,59 +1,64 @@
 <%- include('../partials/header', { title: 'Mis Productos' }) %>
+
 <div class="container mt-4">
-  <div class="d-flex justify-content-between align-items-center mb-3">
-    <h3>Mis Publicaciones</h3>
-    <div>
-      <a href="/usuario/perfil" class="btn btn-outline-secondary">👤 Editar Mi Perfil</a>
-      <a href="/usuario/crear-producto" class="btn btn-primary ms-2">➕ Vender un Producto</a>
-    </div>
-  </div>
-  
-  <div class="card shadow-sm">
-    <div class="card-body">
-      <div class="table-responsive">
-        <table class="table table-hover align-middle">
-          <thead>
-            <tr class="table-light">
-              <th scope="col">Imagen</th>
-              <th scope="col">Nombre</th>
-              <th scope="col">Precio</th>
-              <th scope="col">Stock</th>
-              <th scope="col" class="text-end">Acciones</th>
-            </tr>
-          </thead>
-          <tbody>
-            <% if (productos.length > 0) { %>
-              <% productos.forEach(producto => { %>
-                <tr>
-                  <td>
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h3>Mis Publicaciones</h3>
+    <div>
+      <a href="/usuario/perfil" class="btn btn-outline-secondary">👤 Editar Mi Perfil</a>
+      <a href="/usuario/crear-producto" class="btn btn-primary ms-2">➕ Vender un Producto</a>
+    </div>
+  </div>
+
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <div class="table-responsive">
+        <table class="table table-hover align-middle">
+          <thead>
+            <tr class="table-light">
+              <th scope="col">Imagen</th>
+              <th scope="col">Nombre</th>
+              <th scope="col">Precio</th>
+              <th scope="col">Stock</th>
+              <th scope="col" class="text-end">Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            <% if (productos.length > 0) { %>
+              <% productos.forEach(producto => { %>
+                <tr>
+                  <td>
                     <% 
-                        // CORRECCIÓN CLAVE: Usamos la URL de Cloudinary si no hay imagen
-                        const thumbImageUrl = (producto.imagenes && producto.imagenes.length > 0) 
-                            ? producto.imagenes[0].url 
-                            : 'https://res.cloudinary.com/demjmyttl/image/upload/v1765378418/mercado-lutter/productos/slxk7ifrnai54kuu87fy.jpg'; 
+                      const thumbImageUrl = (
+                        producto.imagenes &&
+                        producto.imagenes.length > 0 &&
+                        producto.imagenes[0].url
+                      )
+                        ? producto.imagenes[0].url
+                        : '/img/default.png'; // Asegúrate de tener este archivo en public/img
                     %>
                     <img src="<%= thumbImageUrl %>" alt="<%= producto.nombre %>" style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
                   </td>
-                  <td><%= producto.nombre %></td>
-                  <td>Gs. <%= producto.precio.toLocaleString('es-ES') %></td>
-                  <td><%= producto.stock %></td>
-                  <td class="text-end">
-                    <a href="/usuario/editar-producto/<%= producto._id %>" class="btn btn-sm btn-outline-secondary me-2">Editar</a>
-                    <form action="/usuario/eliminar-producto/<%= producto._id %>?_method=DELETE" method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta publicación?');">
-                      <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
-                    </form>
-                  </td>
-                </tr>
-              <% }) %>
-            <% } else { %>
-              <tr>
-                <td colspan="5" class="text-center p-4">Aún no has publicado ningún producto.</td>
-              </tr>
-            <% } %>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
+                  <td><%= producto.nombre %></td>
+                  <td>Gs. <%= producto.precio.toLocaleString('es-ES') %></td>
+                  <td><%= producto.stock %></td>
+                  <td class="text-end">
+                    <a href="/usuario/editar-producto/<%= producto._id %>" class="btn btn-sm btn-outline-secondary me-2">Editar</a>
+                    <form action="/usuario/eliminar-producto/<%= producto._id %>?_method=DELETE" method="POST" class="d-inline" onsubmit="return confirm('¿Estás seguro de que quieres eliminar esta publicación?');">
+                      <button type="submit" class="btn btn-sm btn-outline-danger">Eliminar</button>
+                    </form>
+                  </td>
+                </tr>
+              <% }) %>
+            <% } else { %>
+              <tr>
+                <td colspan="5" class="text-center p-4">Aún no has publicado ningún producto.</td>
+              </tr>
+            <% } %>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
 </div>
+
 <%- include('../partials/footer') %>
