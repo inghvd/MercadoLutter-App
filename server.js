@@ -13,17 +13,17 @@ const PORT = process.env.PORT || 3033;
 // Conexión a MongoDB
 connectDB();
 
-// ====== VISTAS ======
+// Vistas
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
-// ====== MIDDLEWARES ======
+// Middlewares
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 
-// ====== HELMET ======
+// Helmet (CSP incluyendo Cloudinary)
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -44,7 +44,7 @@ app.use(
   })
 );
 
-// ====== SESIÓN ======
+// Sesión
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "secreto",
@@ -57,17 +57,29 @@ app.use(
   })
 );
 
-// ====== RUTAS ======
-// Ejemplo de montaje de rutas
-const usuarioRoutes = require("./routes/usuarioRoutes");
-app.use("/usuario", usuarioRoutes);
+// Variables locales (ejemplo mínimo)
+app.use((req, res, next) => {
+  res.locals.usuario = req.session.usuario || null;
+  next();
+});
 
-// ====== 404 ======
+// Rutas
+const usuarioRoutes = require("./routes/usuarioRoutes");
+const productoRoutes = require("./routes/productoRoutes");
+const authRoutes = require("./routes/authRoutes");
+const adminRoutes = require("./routes/adminRoutes");
+
+app.use("/usuario", usuarioRoutes);
+app.use("/producto", productoRoutes);
+app.use("/auth", authRoutes);
+app.use("/admin", adminRoutes);
+
+// 404
 app.use((req, res) => {
   res.status(404).render("404");
 });
 
-// ====== SERVIDOR ======
+// Servidor
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
