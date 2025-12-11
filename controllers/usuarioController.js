@@ -1,26 +1,58 @@
+// controllers/usuarioController.js
 const Producto = require('../models/Producto');
 const Usuario = require('../models/Usuario');
-const fs = require('fs');
-const path = require('path');
-// Importar Cloudinary SDK desde el middleware de subida
 const { cloudinary } = require('../middlewares/upload');
 
 const usuarioController = {
-  // --------------------------------------------------------------------
-  // Mantén tus funciones existentes (showMyProducts, showCreateForm, etc.)
-  // --------------------------------------------------------------------
+  // --- Vistas ---
+  showMyProducts: async (req, res) => {
+    try {
+      const productos = await Producto.find({ vendedor: req.session.usuario.id });
+      res.render('usuario/mis-productos', { productos });
+    } catch (error) {
+      console.error("Error al mostrar mis productos:", error);
+      res.status(500).send("Error al cargar tus productos.");
+    }
+  },
 
-  // ======================================================================
-  // --- createProduct: GUARDA secure_url (file.path) y public_id (filename)
-  // ======================================================================
+  showCreateForm: (req, res) => {
+    res.render('usuario/crear-producto');
+  },
+
+  showEditForm: async (req, res) => {
+    try {
+      const producto = await Producto.findOne({ _id: req.params.id, vendedor: req.session.usuario.id });
+      if (!producto) return res.status(403).render('403', { titulo: 'Acceso denegado' });
+      res.render('usuario/editar-producto', { producto });
+    } catch (error) {
+      console.error("Error al cargar producto para edición:", error);
+      res.status(500).send("Error al cargar producto.");
+    }
+  },
+
+  showProfileForm: (req, res) => {
+    res.render('usuario/perfil', { usuario: req.session.usuario });
+  },
+
+  updateProfile: async (req, res) => {
+    try {
+      const { nombre, email } = req.body;
+      await Usuario.findByIdAndUpdate(req.session.usuario.id, { nombre, email });
+      res.redirect('/usuario/perfil');
+    } catch (error) {
+      console.error("Error al actualizar perfil:", error);
+      res.status(500).send("Error al actualizar perfil.");
+    }
+  },
+
+  // --- Crear producto: guarda secure_url (file.path) y public_id (filename) ---
   createProduct: async (req, res) => {
     try {
       const { nombre, descripcion, precio, categoria, stock } = req.body;
 
-      // Si configuraste upload.array('imagenes', 10), req.files contiene las imágenes
       const imagenes = (req.files || []).map(file => ({
-        url: file.path,         // secure_url → URL pública de Cloudinary
-        filename: file.filename // public_id → para eliminar en Cloudinary
+        url: file.path,         // secure_url (URL pública de Cloudinary)
+        filename: file.filename // public_id (para eliminar en Cloudinary)
       }));
 
       const nuevoProducto = new Producto({
@@ -41,9 +73,7 @@ const usuarioController = {
     }
   },
 
-  // ======================================================================
-  // --- updateProduct: ELIMINA IMAGEN ANTIGUA EN CLOUDINARY SI SE ACTUALIZA
-  // ======================================================================
+  // --- Actualizar producto: elimina imagen antigua en Cloudinary si se actualiza ---
   updateProduct: async (req, res) => {
     try {
       const productoId = req.params.id;
@@ -56,9 +86,9 @@ const usuarioController = {
       const { nombre, descripcion, precio, categoria, stock } = req.body;
       const datosActualizados = { nombre, descripcion, precio, categoria, stock };
 
-      // Si el usuario subió una foto nueva (req.file existe, singular)...
+      // Si se subió una nueva imagen
       if (req.file) {
-        // 1. ELIMINAR LA IMAGEN ANTIGUA DE CLOUDINARY (si existe)
+        // Eliminar la imagen anterior de Cloudinary
         const oldFilename = productoActual?.imagenes?.[0]?.filename;
         if (oldFilename && oldFilename !== 'default.png') {
           cloudinary.uploader.destroy(oldFilename, (error) => {
@@ -66,17 +96,16 @@ const usuarioController = {
           });
         }
 
-        // 2. NUEVA IMAGEN (URL pública y public_id)
+        // Nueva imagen
         const nuevaImagen = {
-          url: req.file.path,                      // secure_url
-          filename: req.file.filename || req.file.public_id // public_id
+          url: req.file.path,
+          filename: req.file.filename || req.file.public_id
         };
 
-        // 3. Reemplazar la primera imagen del array 'imagenes'
+        // Reemplazar la primera imagen
         datosActualizados['imagenes.0'] = nuevaImagen;
       }
 
-      // Actualizar datos (y la primera imagen si corresponde)
       await Producto.findByIdAndUpdate(productoId, { $set: datosActualizados });
       res.redirect('/usuario/productos');
 
@@ -86,9 +115,7 @@ const usuarioController = {
     }
   },
 
-  // ======================================================================
-  // --- deleteProduct: ELIMINA TODAS LAS IMÁGENES DEL PRODUCTO EN CLOUDINARY
-  // ======================================================================
+  // --- Eliminar producto: borra todas las imágenes del producto en Cloudinary ---
   deleteProduct: async (req, res) => {
     try {
       const productoId = req.params.id;
@@ -98,7 +125,6 @@ const usuarioController = {
         return res.status(403).json({ message: 'No tienes permiso para eliminar este producto.' });
       }
 
-      // Eliminar imágenes de Cloudinary (usando su public_id -> filename)
       if (producto.imagenes && producto.imagenes.length > 0) {
         for (let img of producto.imagenes) {
           if (img.filename && img.filename !== 'default.png') {
@@ -115,11 +141,6 @@ const usuarioController = {
       res.status(500).send('Error al eliminar producto.');
     }
   },
-
-  // --------------------------------------------------------------------
-  // Mantén tus otras funciones: showMyProducts, showCreateForm, showEditForm,
-  // showProfileForm, updateProfile, etc. sin cambios.
-  // --------------------------------------------------------------------
 };
 
 module.exports = usuarioController;

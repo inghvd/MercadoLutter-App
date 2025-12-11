@@ -27,14 +27,12 @@
               <% productos.forEach(producto => { %>
                 <tr>
                   <td>
-                    <% 
+                    <%
                       const thumbImageUrl = (
                         producto.imagenes &&
                         producto.imagenes.length > 0 &&
                         producto.imagenes[0].url
-                      )
-                        ? producto.imagenes[0].url
-                        : '/img/default.png'; // Asegúrate de tener este archivo en public/img
+                      ) ? producto.imagenes[0].url : '/images/default.png';
                     %>
                     <img src="<%= thumbImageUrl %>" alt="<%= producto.nombre %>" style="width: 60px; height: 60px; object-fit: cover; border-radius: 5px;">
                   </td>
