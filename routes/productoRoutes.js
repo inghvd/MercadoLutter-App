@@ -23,12 +23,10 @@ router.get('/:id', async (req, res) => {
   try {
     const { id } = req.params;
 
-    // Validar que el ID sea un ObjectId válido
     if (!mongoose.Types.ObjectId.isValid(id)) {
       return res.status(404).render('404', { titulo: 'Producto no encontrado' });
     }
 
-    // Buscar el producto y traer datos del vendedor
     const producto = await Producto.findById(id)
                                    .populate('vendedor', 'nombre telefono');
 
@@ -36,7 +34,6 @@ router.get('/:id', async (req, res) => {
       return res.status(404).render('404', { titulo: 'Producto no encontrado' });
     }
 
-    // Renderizar la vista detalleProducto con el producto
     res.render('detalleProducto', {
       producto,
       titulo: producto.nombre
