@@ -11,7 +11,7 @@ const app = express();
 const PORT = process.env.PORT || 3033;
 const NODE_ENV = process.env.NODE_ENV || "development";
 
-// Conexión a MongoDB (usa el connectDB exportado desde ./db)
+// Conexión a MongoDB
 connectDB();
 
 // Vistas
@@ -22,12 +22,9 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
-
-// Static (sirve assets como /public/images/default.png, CSS, JS, etc.)
 app.use(express.static(path.join(__dirname, "public")));
 
 // Helmet (CSP incluyendo Cloudinary)
-// Nota: Si cambias el cloud_name, actualiza la URL de res.cloudinary.com/<cloud_name> aquí.
 app.use(
   helmet({
     contentSecurityPolicy: {
@@ -53,11 +50,9 @@ app.use(
   })
 );
 
-// Render y proxies: asegura cookies confiables detrás de proxy
 app.set("trust proxy", 1);
 
-// Sesión (usa MongoStore con tu MONGO_URI)
-// En producción (Render), marca la cookie como secure.
+// Sesión
 app.use(
   session({
     secret: process.env.SESSION_SECRET || "secreto",
@@ -76,7 +71,7 @@ app.use(
   })
 );
 
-// Variables locales mínimas
+// Variables locales
 app.use((req, res, next) => {
   res.locals.usuario = req.session.usuario || null;
   next();
@@ -93,7 +88,12 @@ app.use("/producto", productoRoutes);
 app.use("/auth", authRoutes);
 app.use("/admin", adminRoutes);
 
-// Healthcheck opcional (útil para Render)
+// Ruta raíz (evita 404 en /)
+app.get("/", (req, res) => {
+  res.redirect("/producto/catalogo");
+});
+
+// Healthcheck
 app.get("/health", (req, res) => {
   res.status(200).json({ ok: true, env: NODE_ENV, db: mongoose.connection.readyState });
 });
@@ -103,7 +103,7 @@ app.use((req, res) => {
   res.status(404).render("404");
 });
 
-// Error handler (para que no crashee con errores no capturados de rutas)
+// Error handler
 app.use((err, req, res, next) => {
   console.error("Error no controlado:", err);
   res.status(500).send("Error interno del servidor.");
