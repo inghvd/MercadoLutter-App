@@ -1,5 +1,3 @@
-// controllers/usuarioController.js (VERSIÓN CORREGIDA Y FUNCIONAL)
-
 const Producto = require('../models/Producto');
 const Usuario = require('../models/Usuario');
 const fs = require('fs');
@@ -125,3 +123,4 @@ const usuarioController = {
 };
 
 module.exports = usuarioController;
+

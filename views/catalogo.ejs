@@ -14,14 +14,14 @@
         <div class="card h-100 shadow-sm">
           <a href="/producto/<%= producto._id %>">
             <% 
-              // CORRECCIÓN CLAVE: Usamos la URL de Cloudinary si existe, o una imagen local por defecto
+              // Usamos la URL de Cloudinary si existe, o una imagen por defecto local
               const imageUrl = (
                 producto.imagenes &&
                 producto.imagenes.length > 0 &&
                 producto.imagenes[0].url
               )
                 ? producto.imagenes[0].url
-                : '/img/default.png'; // Asegúrate de tener este archivo en public/img
+                : '/images/default.png'; // Usa la carpeta public/images/default.png
             %>
             <img src="<%= imageUrl %>" class="card-img-top" alt="<%= producto.nombre %>" style="height: 250px; object-fit: cover;">
           </a>
@@ -44,3 +44,4 @@
 <% } %>
 
 <%- include('partials/footer') %>
+

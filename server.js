@@ -1,4 +1,3 @@
-// server.js (VERSIÓN CORREGIDA Y FUNCIONAL)
 require("dotenv").config();
 const express = require("express");
 const path = require("path");
@@ -24,7 +23,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
 
-// Static (sirve assets como /public/img/default.png, CSS, JS, etc.)
+// Static (sirve assets como /public/images/default.png, CSS, JS, etc.)
 app.use(express.static(path.join(__dirname, "public")));
 
 // Helmet (CSP incluyendo Cloudinary)
@@ -114,3 +113,4 @@ app.use((err, req, res, next) => {
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en http://localhost:${PORT}`);
 });
+
