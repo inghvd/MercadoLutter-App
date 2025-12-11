@@ -8,8 +8,11 @@ const maxRetries = 5;
 
 async function connectDB() {
   try {
-    await mongoose.connect(MONGO_URI);
-    console.log("✔️  MongoDB conectado");
+    await mongoose.connect(MONGO_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+    console.log("✔️ MongoDB conectado");
   } catch (error) {
     console.error("❌ Error al conectar con MongoDB:", error.message);
     retries++;
@@ -24,7 +27,4 @@ async function connectDB() {
   }
 }
 
-connectDB();
-
-module.exports = mongoose;
-
+module.exports = { mongoose, connectDB };
