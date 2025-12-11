@@ -28,3 +28,4 @@ async function connectDB() {
 }
 
 module.exports = { mongoose, connectDB };
+
