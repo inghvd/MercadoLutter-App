@@ -1,4 +1,4 @@
-MercadoLutter - Starter
+VENTAS Y COMPRAS - Starter
 
 Instrucciones rápidas:
 1. Copiar .env.example a .env y editar (PORT=3033, MONGO_URI, SESSION_SECRET).

@@ -1,7 +1,7 @@
 {
   "name": "mercadolutter-app",
   "version": "1.0.0",
-  "description": "MercadoLutter - Express + MongoDB + EJS",
+  "description": "VENTAS Y COMPRAS - Express + MongoDB + EJS",
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
