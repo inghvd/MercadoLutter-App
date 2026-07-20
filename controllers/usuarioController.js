@@ -74,7 +74,7 @@ const usuarioController = {
     }
   },
 
-  // Actualizar producto
+  // Actualizar producto (Corregido para múltiples imágenes)
   updateProduct: async (req, res) => {
     try {
       const productoId = req.params.id;
@@ -84,17 +84,24 @@ const usuarioController = {
       const { nombre, descripcion, precio, categoria, stock } = req.body;
       const datosActualizados = { nombre, descripcion, precio, categoria, stock };
 
-      if (req.file) {
-        const oldFilename = productoActual?.imagenes?.[0]?.filename;
-        if (oldFilename && oldFilename !== 'default.png') {
-          cloudinary.uploader.destroy(oldFilename, (error) => {
-            if (error) console.error("Error al eliminar imagen anterior:", error);
-          });
+      // Si se subieron nuevas imágenes, procesamos el array completo
+      if (req.files && req.files.length > 0) {
+        // Eliminar las imágenes anteriores de Cloudinary
+        if (productoActual.imagenes && productoActual.imagenes.length > 0) {
+          for (let img of productoActual.imagenes) {
+            if (img.filename && img.filename !== 'default.png') {
+              cloudinary.uploader.destroy(img.filename, (error) => {
+                if (error) console.error("Error al eliminar imagen anterior:", error);
+              });
+            }
+          }
         }
-        datosActualizados['imagenes.0'] = {
-          url: req.file.path,
-          filename: req.file.filename || req.file.public_id
-        };
+
+        // Mapear las nuevas imágenes
+        datosActualizados.imagenes = req.files.map(file => ({
+          url: file.path,
+          filename: file.filename || file.public_id
+        }));
       }
 
       await Producto.findByIdAndUpdate(productoId, { $set: datosActualizados });
@@ -131,4 +138,3 @@ const usuarioController = {
 };
 
 module.exports = usuarioController;
-
