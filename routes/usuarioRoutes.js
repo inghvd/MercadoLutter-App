@@ -19,7 +19,7 @@ router.get('/crear-producto', usuarioController.showCreateForm);
 router.post('/crear-producto', upload.array('imagenes', 10), usuarioController.createProduct);
 
 router.get('/editar-producto/:id', usuarioController.showEditForm);
-router.post('/editar-producto/:id', upload.array('imagenes', 10), usuarioController.updateProduct); // <--- CAMBIADO A upload.array
+router.post('/editar-producto/:id', upload.array('imagenes', 10), usuarioController.updateProduct); // <--- CORREGIDO AQUÍ
 router.delete('/eliminar-producto/:id', usuarioController.deleteProduct);
 
 // Perfil
