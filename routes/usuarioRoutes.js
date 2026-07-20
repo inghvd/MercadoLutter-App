@@ -1,4 +1,4 @@
-// routes/usuarioRoutes.js → versión final corregida
+// routes/usuarioRoutes.js → versión final corregida para múltiples imágenes
 
 const express = require('express');
 const router = express.Router();
@@ -19,7 +19,7 @@ router.get('/crear-producto', usuarioController.showCreateForm);
 router.post('/crear-producto', upload.array('imagenes', 10), usuarioController.createProduct);
 
 router.get('/editar-producto/:id', usuarioController.showEditForm);
-router.post('/editar-producto/:id', upload.single('imagen'), usuarioController.updateProduct);
+router.post('/editar-producto/:id', upload.array('imagenes', 10), usuarioController.updateProduct); // <--- CAMBIADO A upload.array
 router.delete('/eliminar-producto/:id', usuarioController.deleteProduct);
 
 // Perfil
@@ -27,4 +27,3 @@ router.get('/perfil', usuarioController.showProfileForm);
 router.post('/perfil', upload.single('imagenPerfil'), usuarioController.updateProfile);
 
 module.exports = router;
-

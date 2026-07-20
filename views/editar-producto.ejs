@@ -6,11 +6,12 @@
     </div>
     <div class="card-body">
       <form action="/usuario/editar-producto/<%= producto._id %>?_method=POST" method="POST" enctype="multipart/form-data">
-        <!-- El contenido del formulario es idéntico al del admin -->
+        
         <div class="mb-3">
           <label for="nombre" class="form-label">Nombre del Producto</label>
           <input type="text" class="form-control" id="nombre" name="nombre" value="<%= producto.nombre %>" required>
         </div>
+
         <div class="row">
           <div class="col-md-6 mb-3">
             <label for="precio" class="form-label">Precio (Gs.)</label>
@@ -21,22 +22,28 @@
             <input type="number" class="form-control" id="stock" name="stock" value="<%= producto.stock %>" required>
           </div>
         </div>
+
         <div class="mb-3">
             <label for="categoria" class="form-label">Ubicación / Categoría</label>
             <input type="text" class="form-control" id="categoria" name="categoria" value="<%= producto.categoria %>" required>
         </div>
+
+        <!-- CAMBIADO PARA PERMITIR MÚLTIPLES FOTOS -->
         <div class="mb-3">
-          <label for="imagen" class="form-label">Cambiar Foto (Opcional)</label>
-          <input class="form-control" type="file" id="imagen" name="imagen">
+          <label for="imagenes" class="form-label">Agregar o Cambiar Fotos (Puedes seleccionar varias)</label>
+          <input class="form-control" type="file" id="imagenes" name="imagenes" multiple>
         </div>
+
         <div class="mb-3">
           <label for="descripcion" class="form-label">Descripción Detallada</label>
           <textarea class="form-control" id="descripcion" name="descripcion" rows="4" required><%= producto.descripcion %></textarea>
         </div>
+
         <div class="d-flex justify-content-end">
            <a href="/usuario/productos" class="btn btn-secondary me-2">Cancelar</a>
            <button type="submit" class="btn btn-success">Guardar Cambios</button>
         </div>
+
       </form>
     </div>
   </div>
